@@ -132,6 +132,9 @@ def regression_summary(rs: list[dict], n_boot: int, seed: int) -> dict:
         "b2": float(b2),
         "ci_low": [float(v) for v in lo],
         "ci_high": [float(v) for v in hi],
+        # 探索用（判定には使わない）: 基準率だけ軽い（b1<b2）か、全体が縮む（b1≈b2）かを見分ける
+        "b2_minus_b1": float(b2 - b1),
+        "b2_minus_b1_ci": [float(v) for v in ci95(boots[:, 2] - boots[:, 1])],
         "n_clipped": n_clipped(q),
         "closer_to_inverse": int(np.sum(np.abs(q - p_inv) < np.abs(q - p))),
         **brier_parts(q, p),

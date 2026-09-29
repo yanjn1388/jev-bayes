@@ -138,3 +138,24 @@ def test_summarize_rejects_hypotheses_without_neglect():
     s = summarize(records, n_problems=len(records), n_boot=200)
     assert s["hypotheses"]["H1"]["holds"] is False
     assert s["hypotheses"]["H3"]["holds"] is False
+
+
+def test_regression_summary_reports_b2_minus_b1_interval():
+    """探索用: b2-b1 の区間。一様な縮み（b1=b2）なら 0 を含み、人間型の無視（b1<b2）なら正に出る。"""
+    from jev_bayes.analyze import regression_summary
+
+    def records(b1, b2):
+        rng = np.random.default_rng(3)
+        out = []
+        for p in generate_all():
+            if p["stage"] == 2 and p["qtype"] == "noul" and p["lang"] == "en":
+                prior, lr = p["params"]["prior"], p["params"]["lr"]
+                z = b1 * np.log(prior / (1 - prior)) + b2 * np.log(lr) + rng.normal(0, 0.2)
+                out.append({**p, "q": float(_sigmoid(z))})
+        return out
+
+    shrink = regression_summary(records(0.55, 0.55), n_boot=300, seed=1)
+    assert shrink["b2_minus_b1_ci"][0] < 0 < shrink["b2_minus_b1_ci"][1]
+    neglect = regression_summary(records(0.5, 1.0), n_boot=300, seed=1)
+    assert neglect["b2_minus_b1"] == pytest.approx(0.5, abs=0.1)
+    assert neglect["b2_minus_b1_ci"][0] > 0
