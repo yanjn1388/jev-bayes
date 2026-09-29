@@ -30,16 +30,22 @@
 | 上限 | コンテキスト 32K トークン。レート制限・日本語対応は未公表 |
 | 認証 | 実験専用の OpenRouter キー（利用上限を設定）。`.env` の `OPENROUTER_API_KEY`（gitignore 対象） |
 
-リクエスト例（非公式資料の記載。§8 の疎通確認で実際の形を確かめる）:
+リクエストと応答の形（TypeSafe 公式ドキュメント `docs.typesafe.ai/primitives/choice`・`/noul` で確認）:
 
 ```json
 {"model": "typesafe/jev-1.13",
  "state": "...",
- "questions": {"q": {"type": "noul", "instructions": "..."}}}
+ "questions": {
+   "q": {"type": "choice", "instructions": "...",
+         "criteria": {"yes": "説明", "no": "説明"}}}}
 ```
 
+- Choice の応答: `answers.q.choice`（最も確率の高い選択肢名）・`answers.q.probabilities`（選択肢名 → 確率。合計 1）・`answers.q.confidence`
+- Noul の応答: `answers.q.noul`（Yes の確率）。Noul に confidence は無い
+- 質問 ID（`q`）はモデルに送られない。選択肢名と説明はモデルに送られる
+
 > [!warning] 未確認
-> Choice 型のリクエスト形式（選択肢の渡し方）と応答の確率フィールド名は非公式資料にしか無い。疎通確認で確定させ、本書 §2 を更新してから本番に進む。
+> OpenRouter 経由でのモデル名の書き方（`typesafe/jev-1.13` か `jev-1.13` か）は §8 の疎通確認で確定させる。
 
 ## 3. 実験条件（情報の3段のはしご）
 
