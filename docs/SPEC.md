@@ -44,8 +44,11 @@
 - Noul の応答: `answers.q.noul`（Yes の確率）。Noul に confidence は無い
 - 質問 ID（`q`）はモデルに送られない。選択肢名と説明はモデルに送られる
 
-> [!warning] 未確認
-> OpenRouter 経由でのモデル名の書き方（`typesafe/jev-1.13` か `jev-1.13` か）は §8 の疎通確認で確定させる。
+> [!note] 疎通確認で確定（2026-09-30、`data/smoke.jsonl`）
+> - モデル名は `typesafe/jev-1.13` のままで通る。応答の `model` は `typesafe/jev-1.13-20260917`
+> - 応答には `id` と `provider`（`TypeSafe`）も付く。`usage.cost` は1回あたり約 1.5〜1.8×10⁻⁵ ドル
+> - 報告確率は 0.01 刻み
+> - **同じ入力でも答えが揺れる**（5回で ±0.02 程度。例: `s2-medical-pi0.01-lr20-noul-en` は 0.21〜0.23）。そのため本番は各問を $r=5$ 回呼ぶ
 
 ## 3. 実験条件（情報の3段のはしご）
 
