@@ -44,7 +44,7 @@
 - Noul の応答: `answers.q.noul`（Yes の確率）。Noul に confidence は無い
 - 質問 ID（`q`）はモデルに送られない。選択肢名と説明はモデルに送られる
 
-> [!note] 疎通確認で確定（2026-09-30、`data/smoke.jsonl`）
+> [!note] 疎通確認で確定（2026-09-29、`data/smoke.jsonl`）
 > - モデル名は `typesafe/jev-1.13` のままで通る。応答の `model` は `typesafe/jev-1.13-20260917`
 > - 応答には `id` と `provider`（`TypeSafe`）も付く。`usage.cost` は1回あたり約 1.5〜1.8×10⁻⁵ ドル
 > - 報告確率は 0.01 刻み
